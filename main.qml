@@ -6,8 +6,10 @@ import "./components"
 
 
 ApplicationWindow{
+	id: main
 	readonly property color bg: "#3f3f3f"
 	readonly property color fg: "#4a4a4a"
+	property var selection
 	visible: true
 
 	color: bg
@@ -44,7 +46,7 @@ ApplicationWindow{
 				id: rootImageContainerStack
 				anchors.fill: parent
 
-				MasonryLayout {} //index 0
+				Panels.ImageGrid {} //index 0
 				Panels.ImageViewer { id: imageViewer } //index 1
 
 			}
@@ -58,7 +60,7 @@ ApplicationWindow{
 			SplitView.maximumWidth: 400
 			SplitView.fillWidth: false
 
-			PanelBase {
+			Panels.Tags {
 				Layout.fillWidth: true
 				Layout.fillHeight: true
 

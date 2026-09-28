@@ -29,6 +29,10 @@ Item {
 
 	MouseArea {
 		anchors.fill: parent
-		onClicked: { imageViewer.setSource(model.fileUrl); rootImageContainerStack.currentIndex = 1; }
+		onClicked: { 
+			imageViewer.setSource(model.fileUrl); 
+			rootImageContainerStack.currentIndex = 1; 
+			main.selection = model.index
+		}
 	}
 }

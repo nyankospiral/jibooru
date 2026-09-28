@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(exiv2 CONFIG REQUIRED)
 
 qt_standard_project_setup()
 
@@ -32,6 +33,7 @@ target_link_libraries(jibooru PRIVATE
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
+	Exiv2::exiv2lib
 )
 
 install(TARGETS jibooru

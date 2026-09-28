@@ -3,6 +3,11 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QImageReader>
+#include <QStringList>
+#include <QDebug>
+#include <QVariantMap>
+
+#include <exiv2/exiv2.hpp>
 
 ImageModel::ImageModel(QObject *parent)
 	: QAbstractListModel(parent)
@@ -40,6 +45,9 @@ QVariant ImageModel::data(
 		case PixelHeightRole:
 			return image.height;
 
+		case KeywordsRole:
+			return image.keywords;
+
 		default:
 			return {};
 	}
@@ -50,8 +58,104 @@ QHash<int, QByteArray> ImageModel::roleNames() const
 	return {
 		{ FileUrlRole, "fileUrl" },
 		{ PixelWidthRole, "pixelWidth" },
-		{ PixelHeightRole, "pixelHeight" }
+		{ PixelHeightRole, "pixelHeight" },
+		{ KeywordsRole, "keywords" }
 	};
+}
+
+bool ImageModel::readKeywords(
+	const QString &filePath,
+	ImageEntry &image
+)
+{
+	try {
+		auto exivImage =
+			Exiv2::ImageFactory::open(filePath.toStdString());
+
+		if (!exivImage)
+			return false;
+
+		exivImage->readMetadata();
+
+		const Exiv2::IptcData &iptcData = 
+			exivImage->iptcData();
+
+		const std::string keywordKey =
+			"Iptc.Application2.Keywords";
+
+		image.keywords.clear();
+
+		for (auto it = iptcData.begin();
+				it != iptcData.end();
+				++it) {
+
+			if (it->key() == keywordKey) {
+				image.keywords.append(
+					QString::fromStdString(it->toString())
+				);
+			}
+		}
+
+		return true;
+	}
+	catch (const Exiv2::Error &error) {
+		qWarning()
+			<< "Could not read keywords from"
+			<< filePath
+			<< ":"
+			<< error.what();
+
+		return false;
+	}
+}
+
+bool ImageModel::matchesKeywordFilter(const ImageEntry &image) const
+{
+	//no filter, show all images
+	if (m_requiredKeywords.isEmpty())
+		return true;
+
+	for (const QString &requiredKeyword : m_requiredKeywords){
+		bool found = false;
+
+		for (const QString &imageKeyword : image.keywords) {
+			if (imageKeyword.compare(
+						requiredKeyword,
+						Qt::CaseInsensitive
+						) == 0) {
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+			return false;
+	}
+
+	return true;
+}
+
+void ImageModel::setKeywordFilter(const QStringList &keywords)
+{
+	m_requiredKeywords.clear();
+
+	for (const QString &keyword : keywords) {
+		const QString cleanedKeyword = keyword.trimmed();
+
+		if (!cleanedKeyword.isEmpty())
+			m_requiredKeywords.append(cleanedKeyword);
+	}
+
+	beginResetModel();
+	
+	m_images.clear();
+
+	for (const ImageEntry &image : m_allImages) {
+		if (matchesKeywordFilter(image))
+			m_images.append(image);
+	}
+
+	endResetModel();
 }
 
 void ImageModel::loadFolder(const QString &folderPath)
@@ -87,9 +191,28 @@ void ImageModel::loadFolder(const QString &folderPath)
 		image.fileUrl = QUrl::fromLocalFile(file.absoluteFilePath());
 		image.width = imageSize.width();
 		image.height = imageSize.height();
+		readKeywords(file.absoluteFilePath(), image);
 
 		m_images.append(image);
 	}
 
 	endResetModel();
 }
+
+QVariantMap ImageModel::entryAt(int row) const
+{
+    if (row < 0 || row >= m_images.size())
+        return {};
+
+    const ImageEntry &image = m_images.at(row);
+
+    QVariantMap result;
+
+    result["fileUrl"] = image.fileUrl;
+    result["pixelWidth"] = image.width;
+    result["pixelHeight"] = image.height;
+    result["keywords"] = image.keywords;
+
+    return result;
+}
+

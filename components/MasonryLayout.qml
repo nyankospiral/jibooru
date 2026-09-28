@@ -6,8 +6,11 @@ Flickable {
 	contentHeight: masonryRow.childrenRect.height
 	clip: true
 
-	property int columnCount: Math.floor(root.width / 300)
-	property int layoutSpacing: 3
+	required property int imageSizeFactor
+	required property int layoutSpacing
+	required property var model
+
+	property int columnCount: Math.floor(root.width / imageSizeFactor)
 
 	Row { //holds the columns
 		id: masonryRow
@@ -22,10 +25,11 @@ Flickable {
 				id: col
 				property int colIndex: index
 				spacing: root.layoutSpacing
-				width: ((masonryRow.width - (root.layoutSpacing * (root.columnCount - 1))) / root.columnCount) - 3
+				width: ((masonryRow.width - (root.layoutSpacing * (root.columnCount - 1))) / root.columnCount)
 
 				Repeater { //add content from model data to the view
-					model: imageModel
+				id: innerRepeater
+				model: root.model
 					Loader {
 						active: index % root.columnCount === col.colIndex
 						visible: active

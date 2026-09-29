@@ -11,14 +11,14 @@ PanelBase {
 		id: folderModel
 		showDirs: true
 		showFiles: false
-		rootFolder: "file:///home/lili/"
+		rootFolder: "file:///home/lili/Pictures"
 		folder: rootFolder
 		showDotAndDotDot: true
 	}
 
 	TabBar {
 		id: tabs
-		anchors {top: header.bottom; left: parent.left; right: parent.right}
+		anchors {left: parent.left; right: parent.right}
 		contentHeight: 18
 
 		StyledTabButton { text: "dir" }

@@ -1,9 +1,9 @@
 import QtQuick
 
-Rectangle {
+Item {
 	property string label
 	property alias header: header
-	color: fg
+	default property alias content: inner.data
 	Rectangle {
 		id: header
 		color: "#4f4f4f"
@@ -17,4 +17,10 @@ Rectangle {
 			text: label 
 		}
 	}
+	Rectangle {
+		anchors{ top: header.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+		id: inner
+		color: bg
+	}
+
 }

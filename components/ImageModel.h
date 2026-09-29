@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QVector>
 #include <QStringList>
+#include <QVariantList>
 #include <QVariantMap>
 
 class ImageModel : public QAbstractListModel
@@ -31,7 +32,7 @@ public:
 	QHash<int, QByteArray> roleNames() const override;
 
 	Q_INVOKABLE void loadFolder(const QString &folderPath);
-	Q_INVOKABLE void setKeywordFilter(const QStringList &keywords);
+	Q_INVOKABLE void setKeywordFilter(const QVariantList &keywords);
 	Q_INVOKABLE QVariantMap entryAt(int row) const;
 
 private:

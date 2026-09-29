@@ -4,8 +4,9 @@
 #include <QFileInfo>
 #include <QImageReader>
 #include <QStringList>
-#include <QDebug>
+#include <QStringList>
 #include <QVariantMap>
+#include <QDebug>
 
 #include <exiv2/exiv2.hpp>
 
@@ -135,69 +136,85 @@ bool ImageModel::matchesKeywordFilter(const ImageEntry &image) const
 	return true;
 }
 
-void ImageModel::setKeywordFilter(const QStringList &keywords)
+void ImageModel::setKeywordFilter(const QVariantList &keywords)
 {
-	m_requiredKeywords.clear();
+    m_requiredKeywords.clear();
 
-	for (const QString &keyword : keywords) {
-		const QString cleanedKeyword = keyword.trimmed();
+    for (const QVariant &value : keywords) {
+        const QString keyword = value.toString().trimmed();
 
-		if (!cleanedKeyword.isEmpty())
-			m_requiredKeywords.append(cleanedKeyword);
-	}
+        if (!keyword.isEmpty())
+            m_requiredKeywords.append(keyword);
+    }
 
-	beginResetModel();
-	
-	m_images.clear();
+    beginResetModel();
 
-	for (const ImageEntry &image : m_allImages) {
-		if (matchesKeywordFilter(image))
-			m_images.append(image);
-	}
+    m_images.clear();
 
-	endResetModel();
+    for (const ImageEntry &image : m_allImages) {
+        if (matchesKeywordFilter(image))
+            m_images.append(image);
+    }
+
+    endResetModel();
+
 }
 
 void ImageModel::loadFolder(const QString &folderPath)
 {
-	QDir directory(folderPath);
+    QDir directory(folderPath);
 
-	const QStringList nameFilters = {
-		"*.jpg",
-		"*.jpeg",
-		"*.png",
-		"*.webp"
-	};
+    const QStringList nameFilters = {
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.webp"
+    };
 
-	const QFileInfoList files = directory.entryInfoList(
-			nameFilters,
-			QDir::Files | QDir::Readable,
-			QDir::Name
-	);
+    const QFileInfoList files = directory.entryInfoList(
+        nameFilters,
+        QDir::Files | QDir::Readable,
+        QDir::Name
+    );
 
-	beginResetModel();
+    beginResetModel();
 
-	m_images.clear();
+    m_allImages.clear();
+    m_images.clear();
 
-	for (const QFileInfo &file : files){
-		QImageReader reader(file.absoluteFilePath());
-		
-		const QSize imageSize = reader.size();
+    for (const QFileInfo &file : files) {
+        QImageReader reader(file.absoluteFilePath());
 
-		if (!imageSize.isValid())
-			continue;
+        const QSize imageSize = reader.size();
 
-		ImageEntry image;
-		image.fileUrl = QUrl::fromLocalFile(file.absoluteFilePath());
-		image.width = imageSize.width();
-		image.height = imageSize.height();
-		readKeywords(file.absoluteFilePath(), image);
+        if (!imageSize.isValid())
+            continue;
 
-		m_images.append(image);
-	}
+        ImageEntry image;
 
-	endResetModel();
+        image.fileUrl =
+            QUrl::fromLocalFile(
+                file.absoluteFilePath()
+            );
+
+        image.width = imageSize.width();
+        image.height = imageSize.height();
+
+        readKeywords(
+            file.absoluteFilePath(),
+            image
+        );
+
+        m_allImages.append(image);
+
+        if (matchesKeywordFilter(image))
+            m_images.append(image);
+    }
+
+    endResetModel();
+
 }
+
 
 QVariantMap ImageModel::entryAt(int row) const
 {

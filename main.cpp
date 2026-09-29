@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 	ImageModel imageModel;
-	imageModel.loadFolder("/home/lili/git-clones/untitled-image-viewer/testimages");
 
     QQmlApplicationEngine engine;
 	

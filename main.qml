@@ -10,6 +10,7 @@ ApplicationWindow{
 	readonly property color bg: "#3f3f3f"
 	readonly property color fg: "#4a4a4a"
 	property var selection
+	property list<string> filters
 	visible: true
 
 	color: bg
@@ -32,7 +33,7 @@ ApplicationWindow{
 				Layout.preferredHeight: 300
 			}
 
-			PanelBase {
+			Panels.Filters {
 				Layout.fillWidth: true
 				Layout.fillHeight: true
 			}
@@ -67,4 +68,6 @@ ApplicationWindow{
 			}
 		}
 	}
+
+	onFiltersChanged: {imageModel.setKeywordFilter(filters)}
 }

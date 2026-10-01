@@ -15,13 +15,11 @@ qt_standard_project_setup()
 qt_add_executable(jibooru WIN32 MACOSX_BUNDLE
     components/ImageModel.cpp components/ImageModel.h
     main.cpp
+	resources.qrc
 )
 qt_add_qml_module(jibooru
     URI jibooru
     VERSION ${PROJECT_VERSION}
-)
-qt_add_resources(jibooru qml_resources FILES
-	main.qml
 )
 
 # Avoid collision between executable name and QML module directory (QTBUG-98568).

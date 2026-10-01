@@ -2,5 +2,15 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+		<file>panels/Filters.qml</file>
+		<file>panels/ImageGrid.qml</file>
+		<file>panels/ImageViewer.qml</file>
+		<file>panels/Navigation.qml</file>
+		<file>panels/Tags.qml</file>
+		<file>components/ImageDelegate.qml</file>
+		<file>components/PanelBase.qml</file>
+		<file>components/TagDelegate.qml</file>
+		<file>components/MasonryLayout.qml</file>
+		<file>components/StyledTabButton.qml</file>
     </qresource>
 </RCC>

@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QStandardPaths>
+#include <QUrl>
+#include <QString>
 
 #include "components/ImageModel.h"
 
@@ -19,7 +21,7 @@ int main(int argc, char *argv[])
 		&imageModel
 	);
 
-	engine.load("main.qml");
+	engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
 	if (engine.rootObjects().isEmpty())
 		return -1;

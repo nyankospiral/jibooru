@@ -1,7 +1,7 @@
 <!DOCTYPE RCC>
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file alias="main.qml">main.qml</file>
 		<file>panels/Filters.qml</file>
 		<file>panels/ImageGrid.qml</file>
 		<file>panels/ImageViewer.qml</file>

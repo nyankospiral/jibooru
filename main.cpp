@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QStandardPaths>
 
 #include "components/ImageModel.h"
 
@@ -9,6 +10,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 	ImageModel imageModel;
+	imageModel.loadFolder(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
 
     QQmlApplicationEngine engine;
 	

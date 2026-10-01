@@ -1,3 +1,4 @@
+import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -11,8 +12,8 @@ PanelBase {
 		id: folderModel
 		showDirs: true
 		showFiles: false
-		rootFolder: "file:///home/lili/Pictures"
-		folder: rootFolder
+		rootFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+		folder: rootFolder + "/Pictures"
 		showDotAndDotDot: true
 	}
 
@@ -59,7 +60,11 @@ PanelBase {
 					}
 					MouseArea {
 						anchors.fill: parent
-						onClicked: {folderModel.folder = model.fileUrl; imageModel.loadFolder(model.filePath)}
+						onClicked: {
+							main.selection = undefined
+							folderModel.folder = model.fileUrl
+						   	imageModel.loadFolder(model.filePath)
+						}
 					}
 				} 
 

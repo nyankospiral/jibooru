@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 import "../components/"
 
 Rectangle {
@@ -29,7 +28,6 @@ Rectangle {
 				filters.push(modelData)
 			}
 		}
-
 	}
 
 	Behavior on color {

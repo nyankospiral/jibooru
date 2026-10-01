@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(jibooru VERSION 1.0 LANGUAGES C CXX)
 
+include(GNUInstallDirs)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -39,6 +41,14 @@ target_link_libraries(jibooru PRIVATE
 install(TARGETS jibooru
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(FILES jibooru.desktop
+	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+)
+
+install(FILES assets/jibooru.png
+	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps
 )
 
 # qt_generate_deploy_qml_app_script(

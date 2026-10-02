@@ -1,26 +1,20 @@
 import QtQuick
+import QtQuick.Controls
+import jibooru_modules
 
-Item {
+Page {
 	property string label
-	property alias header: header
-	default property alias content: inner.data
-	Rectangle {
-		id: header
-		color: "#4f4f4f"
-		anchors {top: parent.top; left: parent.left; right: parent.right}
-		anchors.margins: 2
+	header: Rectangle {
 		height: 18
+		color: AppSettings.colors.accent
 
 		Text {
 			anchors.fill: parent
-			color: "#fff"
 			text: label 
+			color: AppSettings.colors.text
+			fontSizeMode: Text.VerticalFit
+			padding: -2
 		}
-	}
-	Rectangle {
-		anchors{ top: header.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
-		id: inner
-		color: bg
-	}
-
+	} 
+	padding: 0
 }

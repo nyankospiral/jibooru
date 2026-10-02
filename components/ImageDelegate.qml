@@ -1,4 +1,5 @@
 import QtQuick
+import jibooru_modules
 
 Item {
 	id: imageContainer
@@ -35,7 +36,7 @@ Item {
 		anchors.fill: parent
 		visible: isSelection 
 		color: "transparent"
-		border.color: "mediumpurple"
+		border.color: AppSettings.colors.accent
 		border.width: 2
 	}
 

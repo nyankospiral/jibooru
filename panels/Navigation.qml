@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.folderlistmodel 2.11
 import "../components/"
+import jibooru_modules
 
 PanelBase {
 	label: "Navigation"
@@ -13,8 +14,12 @@ PanelBase {
 		showDirs: true
 		showFiles: false
 		rootFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
-		folder: rootFolder + "/Pictures"
+		folder: StandardPaths.writableLocation(StandardPaths.PicturesLocation)
 		showDotAndDotDot: true
+
+		onFolderChanged: {
+			imageModel.loadFolder(new URL(folder).pathname)
+		}
 	}
 
 	TabBar {
@@ -29,13 +34,11 @@ PanelBase {
 	StackLayout {
 		anchors {top: tabs.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
 		currentIndex: tabs.currentIndex
-		Rectangle {
+		Pane {
 			Layout.fillWidth: true
 			Layout.fillHeight: true
 			anchors.margins: 1
-			color: "#444"
-			border.width: 1
-			border.color: "#555"
+			padding: 0
 			TreeView {
 				anchors.fill: parent
 				model: folderModel
@@ -50,32 +53,28 @@ PanelBase {
 						anchors {left: parent.left; top: parent.top; bottom: parent.bottom}
 						anchors.margins: 7
 						radius: 180
-						color: "white"
+						color: AppSettings.colors.accent
 					}
 					Text {
 						anchors {left: arrow.right; top: parent.top; bottom: parent.bottom}
 						anchors.leftMargin: 5
 						text: model.fileName
-						color: "white"
+						color: AppSettings.colors.text
 					}
 					MouseArea {
 						anchors.fill: parent
 						onClicked: {
 							main.selection = undefined
-							folderModel.folder = model.fileUrl
-						   	imageModel.loadFolder(model.filePath)
+							folderModel.folder = fileUrl
 						}
 					}
 				} 
 
 			}
 		}
-		Rectangle {
-			color: "#444"
+		Pane {
 			Layout.fillWidth: true
 			Layout.fillHeight: true
-			border.width: 1
-			border.color: "white"
 		}
 	}
 

@@ -3,17 +3,16 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import "./panels" as Panels
 import "./components"
+import jibooru_modules
 
 
 ApplicationWindow{
 	id: main
-	readonly property color bg: "#3f3f3f"
-	readonly property color fg: "#4a4a4a"
 	property var selection
 	property list<string> filters
 	visible: true
+	palette.window: AppSettings.colors.base
 
-	color: bg
 	width: 300
 	height: 300
 
@@ -39,10 +38,9 @@ ApplicationWindow{
 			}
 		}
 
-		Rectangle {
+		Item {
 			id: rootImageContainer
 			SplitView.fillWidth: true
-			color: bg
 			StackLayout {
 				id: rootImageContainerStack
 				anchors.fill: parent

@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
 	ImageModel imageModel;
-	imageModel.loadFolder(QStandardPaths::writableLocation(QStandardPaths::HomeLocation));
+	imageModel.loadFolder(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
 
     QQmlApplicationEngine engine;
 	

@@ -8,24 +8,31 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2)
 find_package(exiv2 CONFIG REQUIRED)
 
 qt_standard_project_setup()
+
+set_source_files_properties(
+	AppSettings.qml
+	PROPERTIES QT_QML_SINGLETON_TYPE TRUE
+)
 
 qt_add_executable(jibooru WIN32 MACOSX_BUNDLE
     components/ImageModel.cpp components/ImageModel.h
     main.cpp
 	resources.qrc
 )
+
 qt_add_qml_module(jibooru
-    URI jibooru
+    URI jibooru_modules
+	QML_FILES AppSettings.qml
     VERSION ${PROJECT_VERSION}
 )
 
 # Avoid collision between executable name and QML module directory (QTBUG-98568).
 if(NOT WIN32 AND NOT APPLE)
-    set_property(TARGET jibooru PROPERTY OUTPUT_NAME jibooru_app)
+    set_property(TARGET jibooru PROPERTY OUTPUT_NAME jibooru)
 endif()
 
 target_include_directories(jibooru PRIVATE
@@ -37,6 +44,7 @@ target_link_libraries(jibooru PRIVATE
     Qt6::Gui
     Qt6::Qml
     Qt6::Quick
+	Qt6::QuickControls2
 	Exiv2::exiv2lib
 )
 

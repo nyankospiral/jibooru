@@ -11,23 +11,42 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2)
 find_package(exiv2 CONFIG REQUIRED)
 
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.5)
 
 set_source_files_properties(
-	AppSettings.qml
+	"${CMAKE_CURRENT_SOURCE_DIR}/AppSettings.qml"
 	PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
 qt_add_executable(jibooru WIN32 MACOSX_BUNDLE
-    components/ImageModel.cpp components/ImageModel.h
+    components/ImageModel.cpp 
+	components/ImageModel.h
     main.cpp
-	resources.qrc
 )
+
+if(Qt6_VERSION VERSION_GREATER_EQUAL 6.8)
+    qt_policy(SET QTP0004 NEW)
+endif()
 
 qt_add_qml_module(jibooru
     URI jibooru_modules
-	QML_FILES AppSettings.qml
     VERSION ${PROJECT_VERSION}
+
+	QML_FILES 
+		Main.qml	
+		AppSettings.qml
+		
+		panels/Filters.qml
+        panels/ImageGrid.qml
+        panels/ImageViewer.qml
+        panels/Navigation.qml
+        panels/Tags.qml
+
+        components/ImageDelegate.qml
+        components/PanelBase.qml
+        components/TagDelegate.qml
+        components/MasonryLayout.qml
+        components/StyledTabButton.qml
 )
 
 # Avoid collision between executable name and QML module directory (QTBUG-98568).
@@ -53,6 +72,14 @@ install(TARGETS jibooru
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+qt_generate_deploy_qml_app_script(
+    TARGET jibooru
+    OUTPUT_SCRIPT deploy_script
+    NO_TRANSLATIONS
+)
+
+install(SCRIPT ${deploy_script})
+
 install(FILES jibooru.desktop
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
@@ -60,12 +87,3 @@ install(FILES jibooru.desktop
 install(FILES assets/jibooru.png
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/256x256/apps
 )
-
-# qt_generate_deploy_qml_app_script(
-#     TARGET jibooru
-#     FILENAME_VARIABLE deploy_script
-#     NO_UNSUPPORTED_PLATFORM_ERROR
-#     DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
-#     MACOS_BUNDLE_POST_BUILD
-# )
-# install(SCRIPT ${deploy_script})

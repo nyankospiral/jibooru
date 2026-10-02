@@ -72,14 +72,6 @@ install(TARGETS jibooru
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-qt_generate_deploy_qml_app_script(
-    TARGET jibooru
-    OUTPUT_SCRIPT deploy_script
-    NO_TRANSLATIONS
-)
-
-install(SCRIPT ${deploy_script})
-
 install(FILES jibooru.desktop
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
 )
